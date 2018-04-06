@@ -1,5 +1,7 @@
 package org.apache.flink.api.scala.derived.serializer.instances
 
+import java.math.BigInteger
+
 import org.apache.flink.api.scala.derived.serializer.{Serializer, ValueSerializer}
 
 
@@ -21,4 +23,15 @@ trait L01_Primitives extends L02_Injections {
   implicit def doubleSerializer: Serializer[Double] = ValueSerializer(_.writeDouble(_), _.readDouble())
 
   implicit def unitSerializer: Serializer[Unit] = ValueSerializer((_, _) => {}, _ => ())
+
+  implicit def bigIntSerializer: Serializer[BigInt] = ValueSerializer[BigInt]((out, t) => {
+    val bytes = t.toByteArray
+    out.writeInt(bytes.length)
+    out.write(bytes)
+  }, in => {
+    val length = in.readInt()
+    val bytes = new Array[Byte](length)
+    in.readFully(bytes)
+    BigInt(new BigInteger(bytes))
+  })
 }

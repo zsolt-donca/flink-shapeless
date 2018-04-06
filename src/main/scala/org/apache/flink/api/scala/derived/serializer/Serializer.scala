@@ -2,7 +2,9 @@ package org.apache.flink.api.scala.derived.serializer
 
 import java.io.{DataInput, DataOutput}
 
-trait Serializer[T] {
+import org.apache.flink.api.scala.derived.serializer.instances.SerializerInstances
+
+trait Serializer[T] extends Serializable {
   def serialize(value: T, dataOutput: DataOutput, state: SerializationState): Unit
 
   def deserialize(dataInput: DataInput, state: DeserializationState): T
@@ -11,6 +13,9 @@ trait Serializer[T] {
 
   def deserializeNewValue(dataInput: DataInput, state: DeserializationState): T
 }
+
+object Serializer extends SerializerInstances
+
 
 trait RefSerializer[T] extends Serializer[T] {
   def serialize(value: T, dataOutput: DataOutput, state: SerializationState): Unit = {
@@ -44,6 +49,7 @@ object RefSerializer {
   }
 }
 
+
 trait ValueSerializer[T] extends Serializer[T] {
   def serialize(value: T, dataOutput: DataOutput, state: SerializationState): Unit = serializeNewValue(value, dataOutput, state)
 
@@ -51,7 +57,7 @@ trait ValueSerializer[T] extends Serializer[T] {
 }
 
 object ValueSerializer {
-  def apply[T <: AnyVal](write: (DataOutput, T) => Unit, read: DataInput => T): ValueSerializer[T] = new ValueSerializer[T] {
+  def apply[T](write: (DataOutput, T) => Unit, read: DataInput => T): ValueSerializer[T] = new ValueSerializer[T] {
     override def serializeNewValue(value: T, dataOutput: DataOutput, state: SerializationState): Unit = write(dataOutput, value)
 
     override def deserializeNewValue(dataInput: DataInput, state: DeserializationState): T = read(dataInput)

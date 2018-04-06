@@ -2,13 +2,12 @@ package org.apache.flink.api.scala.derived.serializer
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream}
 
-import org.apache.flink.api.scala.derived.serializer.instances.AllInstances
 import org.scalacheck.{Arbitrary, ScalacheckShapeless}
 import org.scalatest.Assertions
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import shapeless.{Coproduct, HList}
 
-trait RefSerializerHelper extends GeneratorDrivenPropertyChecks with Assertions with ScalacheckShapeless with AllInstances {
+trait RefSerializerHelper extends GeneratorDrivenPropertyChecks with Assertions with ScalacheckShapeless {
 
   def forAllRoundTrip[T <: AnyRef : Serializer : Arbitrary](): Unit = {
     forAll { value: T =>

@@ -15,18 +15,16 @@
  */
 package org.apache.flink
 
-import api.common.ExecutionConfig
-import api.common.typeinfo.TypeInformation
-import api.scala._
-import core.memory._
+import java.io._
 
+import org.apache.flink.api.common.ExecutionConfig
+import org.apache.flink.api.common.typeinfo.TypeInformation
+import org.apache.flink.core.memory._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Gen._
 import org.scalacheck.rng.Seed
 import org.scalameter.api._
 import org.scalameter.picklers.Implicits._
-
-import java.io._
 
 object TypeInfoBench extends Bench.OfflineReport {
   import ADTsBench._
@@ -52,12 +50,13 @@ object TypeInfoBench extends Bench.OfflineReport {
   }
 
   performance of "Flink-Shapeless" in {
-    import derived.auto._
+    import api.scala.derived.auto._
     bench [NTree[Int]]
     bench [BTree[Int]]
   }
 
   performance of "Kryo serializer" in {
+    import api.scala._
     bench [NTree[Int]]
     bench [BTree[Int]]
   }

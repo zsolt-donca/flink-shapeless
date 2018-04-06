@@ -15,19 +15,17 @@
  */
 package org.apache.flink
 
-import api.common.typeinfo._
-import api.scala._
-import api.scala.derived
-import api.scala.derived.typeutils._
-
-import org.scalacheck._
-
-import scala.util._
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-
 import java.awt.Color
 import java.lang.reflect.Type
+
+import org.apache.flink.api.common.typeinfo._
+import org.apache.flink.api.scala.derived
+import org.apache.flink.api.scala.derived.typeutils._
+import org.scalacheck._
+
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+import scala.util._
 
 /** Data definitions. Must be separate due to SI-7046. */
 object ADTsTest {
